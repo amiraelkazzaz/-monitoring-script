@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # System Monitoring Script
 
 This script monitors system resources such as disk usage, CPU usage, memory usage, and top memory-consuming processes. It generates a report and sends email alerts if any thresholds are breached.
@@ -153,3 +154,7 @@ PID USER %MEM COMMAND
 ```
 
 
+=======
+# -monitoring-script
+A system monitoring script for Ubuntu.
+>>>>>>> origin/main
