@@ -53,23 +53,7 @@ This script monitors system resources such as disk usage, CPU usage, memory usag
 3. Install required tools:
    ```bash
    sudo apt update
-   sudo apt install mailutils
-   ```
-
-4. (Optional) Configure SSMTP for Gmail SMTP:
-   - Install SSMTP:
-     ```bash
-     sudo apt install ssmtp
-     ```
-   - Edit `/etc/ssmtp/ssmtp.conf`:
-     ```plaintext
-     root=your_email@gmail.com
-     mailhub=smtp.gmail.com:587
-     AuthUser=your_email@gmail.com
-     AuthPass=your_password_or_app_password
-     UseTLS=YES
-     UseSTARTTLS=YES
-     ```
+   sudo apt-get install msmtp
 
 ---
 
@@ -87,8 +71,95 @@ Example:
 ```bash
 ./system_monitor.sh -t 15 -f custom_log.log
 ```
+Certainly! Below is a detailed section you can add to your `README.md` file to document the msmtp configuration. This will help others (or yourself in the future) understand how to set up and use msmtp for sending emails via SSH.
 
----
+### **Example msmtp Configuration Section for README.md**
+
+```markdown
+## msmtp Configuration
+
+### Overview
+msmtp is a lightweight SMTP client that can be used to send emails from the command line. It's particularly useful for automating email notifications in scripts or applications.
+
+### Installation
+To install msmtp, use your package manager. For Ubuntu/Debian-based systems:
+```bash
+sudo apt update
+sudo apt install msmtp
+```
+
+### Configuration
+#### Step 1: Create the Configuration File
+Create a configuration file for msmtp at `~/.msmtprc`. Make sure this file has the correct permissions to prevent unauthorized access:
+```bash
+touch ~/.msmtprc
+chmod 600 ~/.msmtprc
+```
+
+#### Step 2: Edit the Configuration File
+Open the `~/.msmtprc` file in a text editor:
+```bash
+nano ~/.msmtprc
+```
+
+Add the following configuration details. Replace the placeholders with your actual email address and password:
+
+```plaintext
+# Default account settings
+defaults
+tls on
+tls_starttls on
+tls_trust_file /etc/ssl/certs/ca-certificates.crt
+
+# Account for Gmail
+account default
+host smtp.gmail.com
+port 587
+from your_email@gmail.com
+auth on
+user your_email@gmail.com
+password your_password_or_app_password
+```
+
+**Note**: If you're using Gmail, make sure to generate an app-specific password if you have two-factor authentication enabled.
+
+#### Step 3: Test the Configuration
+Test the msmtp configuration by sending a test email:
+```bash
+echo "This is a test email sent using msmtp." | msmtp -a default recipient@example.com
+```
+
+Replace `recipient@example.com` with the email address where you want to receive the test email.
+
+### Usage in Scripts
+You can use msmtp in your scripts to send emails. Here's an example of how to send an email alert:
+
+```bash
+#!/bin/bash
+
+# Email configuration
+RECIPIENT="your_email@example.com"
+SUBJECT="System Monitoring Alert - $(date '+%Y-%m-%d %H:%M:%S')"
+BODY=$(cat <<EOF
+System Monitoring Report - $(date '+%Y-%m-%d %H:%M:%S')
+======================================
+
+$(cat /path/to/system_monitor.log)
+
+Warning: Disk usage exceeds the specified threshold!
+EOF
+)
+
+# Send the email using msmtp
+if echo "$BODY" | msmtp -a default "$RECIPIENT"; then
+    echo "Email alert sent successfully."
+else
+    echo "Failed to send email alert."
+fi
+```
+
+Make sure to replace `/path/to/system_monitor.log` with the actual path to your log file.
+
 
 ## Cron Job Setup
 
