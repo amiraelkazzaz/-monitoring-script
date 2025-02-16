@@ -223,6 +223,13 @@ PID USER %MEM COMMAND
 2345 user1 8.3 chrome
 3456 user2 7.8 java
 ```
+## 🖼️ Screenshots
+
+| e-mail 1  | e-mail 2  |
+|-------------------------------- | --------------------------------- |
+|![e-mail](images/1.png)|![e-mail](images/2.png) |
+
+---
 
 
 =======
